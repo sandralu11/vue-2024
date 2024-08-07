@@ -1,0 +1,1 @@
+import{_ as e,c as o,o as s,a as c}from"./index-hmW4Xzg9.js";const t={},n={class:"week3"},_=c("h1",null,"Comming soon",-1),a=[_];function r(i,d){return s(),o("div",n,a)}const f=e(t,[["render",r]]);export{f as default};
