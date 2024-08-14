@@ -5,7 +5,6 @@ import { ref, onMounted } from 'vue'
 const api = 'https://todolist-api.hexschool.io'
 const isShow = ref(true)
 let isLogin = ref(false)
-let isEditable = ref(false)
 //註冊
 const signupRes = ref('')
 const messageSignup = ref('')
@@ -16,9 +15,10 @@ const signupButton = async () => {
     const res = await axios.post(`${api}/users/sign_up`, signUp.value)
     console.log(res)
     signupRes.value = res.data.uid
+     alert('註冊成功');
+    isShow.value=true
   } catch (error) {
     console.log(error)
-    // alert('驗證失敗: ' + error.message);
     messageSignup.value = '驗證失敗: ' + error.response.data.message
   }
 }
@@ -26,15 +26,20 @@ const signupButton = async () => {
 const signinRes = ref('')
 const signIn = ref({ email: '', password: '' })
 const messageSignIn = ref('')
+const user = ref({
+  nickname: '',
+  uid: ''
+})
 const signinButton = async () => {
   try {
-    // console.log(`${api}/users/sign_in`)
     const res = await axios.post(`${api}/users/sign_in`, signIn.value)
     console.log(res)
     // cookie存token
     signinRes.value = res.data.token
     //寫入：cookie =token;到期日
     document.cookie = `todolistCookieName=${res.data.token}`
+    isLogin.value = true
+    user.value = res.data
   } catch (error) {
     messageSignIn.value = '驗證失敗: ' + error.message
     console.log(messageSignIn)
@@ -45,10 +50,7 @@ const myToken = document.cookie.replace(
   /(?:(?:^|.*;\s*)todolistCookieName\s*\=\s*([^;]*).*$)|^.*$/,
   '$1'
 )
-const user = ref({
-  nickname: '',
-  uid: ''
-})
+
 onMounted(async () => {
   try {
     const res = await axios.get(`${api}/users/checkout`, {
@@ -76,18 +78,19 @@ const signoutButton = async () => {
       }
     )
     console.log(res)
-    alert(res.data.message)
+    isLogin.value=false
   } catch (error) {
     console.log(error.message)
   }
 }
 
 // todolist
-const text = ref('請輸入代辦事項')
+const text = ref('')
 const todos = ref([
   {
     text: '範例',
-    id: 124
+    id: 124,
+    checked:false,
   }
 ])
 
@@ -95,7 +98,8 @@ const addTodo = () => {
   //新增文字匡內容至下方資料
   todos.value.push({
     text: text.value,
-    id: new Date().getTime()
+    id: new Date().getTime(),
+    checked:false,
   })
   console.log(todos.value)
 }
@@ -121,7 +125,7 @@ const deleteTodo = (item) => {
         <input
           type="text"
           class="form-control"
-          placeholder="Recipient's username"
+          placeholder="請輸入待辦事項"
           aria-label="Recipient's username"
           aria-describedby="button-addon2"
           v-model="text"
@@ -132,9 +136,9 @@ const deleteTodo = (item) => {
       </div>
       <div class="form-check">
         <div v-for="item in todos" :key="item.id" class="p-2">
-          <input class="form-check-input" type="checkbox" id="gridCheck" />
+          <input class="form-check-input" type="checkbox" id="gridCheck" v-model="item.checked"/>
           <label class="form-check-label" for="gridCheck">
-            <span class="p-2">
+            <span class="p-2" :class="{'text-decoration-line-through':item.checked}">
               {{ item.text }}
             </span>
             <button
@@ -178,11 +182,11 @@ const deleteTodo = (item) => {
                 <input
                   type="email"
                   class="form-control"
-                  id="floatingInput"
+                  id="floatingInputsignup"
                   placeholder="name@example.com"
                   v-model="signUp.nickname"
                 />
-                <label for="floatingInput">nickname</label>
+                <label for="floatingInputsignup">nickname</label>
               </div>
               <div class="col-12">
                 <button class="btn btn-primary" type="button" @click="signupButton">
@@ -204,11 +208,11 @@ const deleteTodo = (item) => {
                 <input
                   type="email"
                   class="form-control"
-                  id="floatingInput"
+                  id="floatingInputsignIn"
                   placeholder="name@example.com"
                   v-model="signIn.email"
                 />
-                <label for="floatingInput">Email address</label>
+                <label for="floatingInputsignIn">Email address</label>
               </div>
               <div class="form-floating mb-3">
                 <input
