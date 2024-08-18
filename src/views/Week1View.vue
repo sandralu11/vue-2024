@@ -107,7 +107,7 @@ const confirmEdit = () => {
           <td>{{ drink.id }}</td>
           <td>{{ drink.name }}</td>
           <td>
-            <small>{{ drink.description }}</small>
+      <small>{{ drink.description }}</small>
           </td>
           <td>{{ drink.price }}</td>
           <td>
