@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-
+import W3Drink from '../components/W3Drink.vue'
 const data = [
   {
     id: 1,
@@ -105,12 +105,14 @@ const submitIist = (subtempItem, remark, tempTotal) => {
           <div class="col-md-4">
             <div class="list-group">
               <div v-for="drink in drinks" :key="drink.id" @click="prepareItem(drink)">
-                <div class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ drink.name }}</h5>
-                    <small>${{ drink.price }}</small>
+                <div class="list-group">
+                  <div v-for="drink in drinks" :key="drink.id" @click="prepareItem(drink)">
+                    <W3Drink
+                      :name="drinks.value.name"
+                      :price="drinks.value.price"
+                      :description="drinks.value.description"
+                    />
                   </div>
-                  <p class="mb-1">{{ drink.description }}</p>
                 </div>
               </div>
             </div>
