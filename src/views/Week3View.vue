@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import W3Drink from '../components/W3Drink.vue'
+import W3Temp from '../components/W3Temp.vue'
 const data = [
   {
     id: 1,
@@ -94,6 +95,12 @@ const submitIist = (subtempItem, remark, tempTotal) => {
   // drinkList.value.drinkItems={...tempItem.value}
   // drinkList.value.drinkRemark=remark.value
   // drinkList.value.drinkTotal=tempTotal.value
+  tempItem.value= []
+}
+
+const selectCount = (tempObj)=>{
+  // console.log(tempItem.value[tempObj.index].count);
+  tempItem.value[tempObj.index].count=tempObj.count
 }
 </script>
 <template>
@@ -103,19 +110,15 @@ const submitIist = (subtempItem, remark, tempTotal) => {
       <div class="container mt-5">
         <div class="row">
           <div class="col-md-4">
-            <div class="list-group">
-              <div v-for="drink in drinks" :key="drink.id" @click="prepareItem(drink)">
                 <div class="list-group">
                   <div v-for="drink in drinks" :key="drink.id" @click="prepareItem(drink)">
                     <W3Drink
-                      :name="drinks.value.name"
-                      :price="drinks.value.price"
-                      :description="drinks.value.description"
+                      :name="drink.name"
+                      :price="drink.price"
+                      :description="drink.description"
                     />
                   </div>
                 </div>
-              </div>
-            </div>
           </div>
           <div class="col-md-8">
             <table class="table">
@@ -131,30 +134,17 @@ const submitIist = (subtempItem, remark, tempTotal) => {
               </thead>
 
               <tbody>
-                <tr v-for="item in tempItem" :key="item.id">
-                  <td>
-                    <button type="button" class="btn btn-sm" @click="deleteDrink">x</button>
-                  </td>
-                  <td>{{ item.name }}</td>
-                  <td>
-                    <small>{{ item.description }}</small>
-                  </td>
-                  <td>
-                    <select class="form-select" v-model="item.count">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
-                    </select>
-                  </td>
-                  <td>${{ item.price }}</td>
-                  <td>${{ item.price * item.count }}</td>
+                <tr v-for="(item,index) in tempItem" :key="item.id">
+                  <W3Temp
+                    :name="item.name"
+                    :price="item.price"
+                    :description="item.description"
+                    :count="item.count"
+                    :deleteDrink="deleteDrink"
+                    :index="index"
+                    @change-count="selectCount"
+                  >
+                  </W3Temp>
                 </tr>
               </tbody>
             </table>
