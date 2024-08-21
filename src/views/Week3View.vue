@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import W3Drink from '../components/W3Drink.vue'
 import W3Temp from '../components/W3Temp.vue'
+import W3Oreder from '../components/w3Order.vue'
 const data = [
   {
     id: 1,
@@ -95,12 +96,12 @@ const submitIist = (subtempItem, remark, tempTotal) => {
   // drinkList.value.drinkItems={...tempItem.value}
   // drinkList.value.drinkRemark=remark.value
   // drinkList.value.drinkTotal=tempTotal.value
-  tempItem.value= []
+  tempItem.value = []
 }
-
-const selectCount = (tempObj)=>{
+// W3Tempm：改變數字
+const selectCount = (tempObj) => {
   // console.log(tempItem.value[tempObj.index].count);
-  tempItem.value[tempObj.index].count=tempObj.count
+  tempItem.value[tempObj.index].count = tempObj.count
 }
 </script>
 <template>
@@ -110,15 +111,11 @@ const selectCount = (tempObj)=>{
       <div class="container mt-5">
         <div class="row">
           <div class="col-md-4">
-                <div class="list-group">
-                  <div v-for="drink in drinks" :key="drink.id" @click="prepareItem(drink)">
-                    <W3Drink
-                      :name="drink.name"
-                      :price="drink.price"
-                      :description="drink.description"
-                    />
-                  </div>
-                </div>
+            <div class="list-group">
+              <div v-for="drink in drinks" :key="drink.id" @click="prepareItem(drink)">
+                <W3Drink :name="drink.name" :price="drink.price" :description="drink.description" />
+              </div>
+            </div>
           </div>
           <div class="col-md-8">
             <table class="table">
@@ -134,7 +131,7 @@ const selectCount = (tempObj)=>{
               </thead>
 
               <tbody>
-                <tr v-for="(item,index) in tempItem" :key="item.id">
+                <tr v-for="(item, index) in tempItem" :key="item.id">
                   <W3Temp
                     :name="item.name"
                     :price="item.price"
@@ -191,9 +188,11 @@ const selectCount = (tempObj)=>{
                     </thead>
                     <tbody>
                       <tr v-for="item in drinkList.drinkItems" :key="item.id">
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.count }}</td>
-                        <td>${{ item.price * item.count }}</td>
+                        <W3Oreder
+                          :name="item.name"
+                          :count="item.count"
+                          :price="item.price"
+                        ></W3Oreder>
                       </tr>
                     </tbody>
                   </table>
